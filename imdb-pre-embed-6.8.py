@@ -26,9 +26,9 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 import numpy as np
 
-maxlen=100
-training_samples=200
-validation_samples=10000
+maxlen=150
+training_samples=18000
+validation_samples=5000
 max_words=10000
 
 tokenizer=Tokenizer(num_words=max_words)
@@ -42,7 +42,7 @@ labels=np.asarray(labels)
 print('Shape of data tensor:',data.shape)
 print('Shape of label tensor:',labels.shape)
 
-indices=np.arrange(data.shape[0])
+indices=np.arange(data.shape[0])
 np.random.shuffle(indices)
 data=data[indices]
 labels=labels[indices]
@@ -56,7 +56,7 @@ print('y_train first 10:',y_train[:10])
 
 glove_dir='./glove.6B'
 embeddings_index={}
-f=open(os.path.join(glove_dir,'glove.6B.100d.txt'))
+f=open(os.path.join(glove_dir,'glove.6B.100d.txt'),encoding='UTF-8')
 for line in f:
     values=line.split()
     word=values[0]
