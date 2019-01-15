@@ -1,5 +1,5 @@
 import os
-imdb_dir='./aclImdb'
+imdb_dir=os.path.abspath('./aclImdb')
 train_dir=os.path.join(imdb_dir,'train')
 
 labels=[]

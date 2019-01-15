@@ -11,5 +11,11 @@ b=np.random.random((output_features))
 
 successive_outputs=[]
 for numb,input_t in enumerate(inputs):
-    dot_t=np.dot(W,input_t)
+    dot_t=np.dot(W,input_t)#(output_features,input_features).(input_features,)=(output_features,)
     print('{0}--{1}--{2}'.format(numb,input_t,dot_t))
+    output_t=np.tanh(dot_t+np.dot(U,state_t)+b)
+    successive_outputs.append(output_t)
+    state_t=output_t
+print('successive_outputs={0}'.format(successive_outputs))
+final_output_sequence=np.concatenate(successive_outputs,axis=0)
+print('final_ouput:',final_output_sequence)
