@@ -7,7 +7,7 @@ x_train=sequence.pad_sequences(x_train,maxlen)
 x_test=sequence.pad_sequences(x_test,maxlen)
 
 from keras.models import Sequential
-from keras.layers import Dense,Embedding,LSTM
+from keras.layers import Dense,Embedding,LSTM,GRU
 model=Sequential()
 model.add(Embedding(dict_len,32))
 model.add(LSTM(32))
