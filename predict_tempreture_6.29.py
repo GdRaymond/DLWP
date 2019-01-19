@@ -17,9 +17,9 @@ for i,line in enumerate(lines):
 temp=float_data[:,1]
 
 #Similar scale: blow transform the data to standard score, substract mean then devided by standard deviation,标准分数=数值减去平均值除以标准方差
-mean=float_data[:20000].mean(axis=0)
+mean=float_data[:200000].mean(axis=0)
 float_data-=mean
-std=float_data[:20000].std(axis=0)
+std=float_data[:200000].std(axis=0)
 print('std:',std)
 float_data/=std
 
@@ -48,12 +48,12 @@ step=6
 delay=144
 batch_size=128
 
-train_gen=generator(float_data,lookback,delay,0,20000,True,batch_size,step)
-val_gen=generator(float_data,lookback,delay,20001,30000,False,batch_size,step)
-test_gen=generator(float_data,lookback,delay,30001,None,False,batch_size,step)
+train_gen=generator(float_data,lookback,delay,0,200000,True,batch_size,step)
+val_gen=generator(float_data,lookback,delay,200001,300000,False,batch_size,step)
+test_gen=generator(float_data,lookback,delay,300001,None,False,batch_size,step)
 
-val_steps=(30000-20001-lookback)
-test_steps=(len(float_data)-30001-lookback)
+val_steps=(300000-200001-lookback)//batch_size
+test_steps=(len(float_data)-300001-lookback)//batch_size
 
 def evaluate_naive_method():
     batch_maes=[]
@@ -79,12 +79,17 @@ model.summary()
 model.compile(optimizer=RMSprop(),loss='mae')
 history=model.fit_generator(train_gen,steps_per_epoch=500,epochs=20,validation_data=val_gen,validation_steps=val_steps)
 '''
-model.add(GRU(32,input_shape=(None,float_data.shape[-1])))
+model.add(GRU(32,dropout=0.2,recurrent_dropout=0.2,input_shape=(None,float_data.shape[-1])))
 model.add(Dense(1))
 model.summary()
 model.compile(optimizer='rmsprop',loss='mae')
-history=model.fit_generator(train_gen,steps_per_epoch=500,epochs=20,validation_data=val_gen,validation_steps=val_steps)
+import datetime
+time_s=datetime.datetime.now()
+history=model.fit_generator(train_gen,steps_per_epoch=500,epochs=40,validation_data=val_gen,validation_steps=val_steps)
+time_e=datetime.datetime.now()
 
+print('start at: ',time_s)
+print('end at: ',time_e)
 import matplotlib.pyplot as plt
 loss=history.history['loss']
 val_loss=history.history['val_loss']
