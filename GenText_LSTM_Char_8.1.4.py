@@ -35,6 +35,7 @@ optimizer=keras.optimizers.RMSprop(lr=0.01)
 model.compile(loss='categorical_crossentropy',optimizer=optimizer)
 
 def sample(preds,temperature=1.0):
+    print('==original preds: ',preds)
     preds=np.asarray(preds).astype('float64')
     preds=np.log(preds) / temperature
     exp_preds=np.exp(preds)
@@ -59,7 +60,9 @@ for epoch in range(1,60):
             for t,char in enumerate(generated_text):
                 sampled[0,t,char_indices[char]]=1.
             preds=model.predict(sampled,verbose=0)[0]
+            print('==original preds[0]: ', preds)
             next_index=sample(preds,temperature)
+            print('==after sample preds: ', next_index)
             next_char=chars[next_index]
             generated_text+=next_char
             generated_text=generated_text[1:]
