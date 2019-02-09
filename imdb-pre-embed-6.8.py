@@ -34,6 +34,7 @@ max_words=10000
 tokenizer=Tokenizer(num_words=max_words)
 tokenizer.fit_on_texts(texts)
 sequences=tokenizer.texts_to_sequences(texts)
+print('sequences firt is ',sequences[:20])
 word_index=tokenizer.word_index
 print('Found {0} unique tokens.'.format(len(word_index)))
 data=pad_sequences(sequences,maxlen=maxlen)
