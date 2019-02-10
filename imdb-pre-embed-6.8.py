@@ -26,10 +26,14 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 import numpy as np
 
+
+
 maxlen=150
 training_samples=18000
 validation_samples=5000
 max_words=10000
+
+
 
 tokenizer=Tokenizer(num_words=max_words)
 tokenizer.fit_on_texts(texts)

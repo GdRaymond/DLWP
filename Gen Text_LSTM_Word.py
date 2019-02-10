@@ -28,7 +28,14 @@ print('found word_index len={0},word_index={1}'.format(len(word_index), word_ind
 print('found index_word len={0}, index_word={1}'.format(len(index_word),index_word))
 x_train=keras.preprocessing.sequence.pad_sequences(sequenses,maxlen=maxlen)
 y_train=np.zeros((len(next_words),len(word_index)))
+import re
 for i,word in enumerate(next_words):
+    #print('word=',word)
+    match=re.search(r'\w+',word)
+    if match:
+        word=match.group(0)
+    else:
+        word='the'
     y_train[i,word_index.get(word,2)-1]=1
 
 print('x_train len={0}, content={1}'.format(len(x_train),x_train[:10]))
@@ -51,6 +58,9 @@ def sample(predics,tempreture):
     print('log and divide tempreture predics =',predics)
     exp_predics=np.exp(predics)
     print('exp_predics=',exp_predics)
+    return np.argmax(exp_predics)
+    if np.sum(exp_predics)==0:
+        return np.argmax(exp_predics)
     predics=exp_predics/np.sum(exp_predics)
     print('exp_predics/np.sum(exp_predics=',predics)
     probas=np.random.multinomial(1,predics,1)
@@ -68,6 +78,11 @@ for epoch in range(2):
     print('start generated_text is ',' '.join(l_generated))
     encoded_words = []
     for word in l_generated:
+        match=re.search(r'\w+',word)
+        if match:
+            word=match.group(0)
+        else:
+            word='the'
         encoded_words.append(word_index.get(word))
 
     for tempreture in [1.0,0.5]:
@@ -78,7 +93,8 @@ for epoch in range(2):
             gen_next_word_index=sample(predics,tempreture)
             print('generated next word index=',gen_next_word_index)
             generated_word='{0} {1}'.format(generated_word,index_word.get(gen_next_word_index))
-            encoded_words=encoded_words.append(gen_next_word_index)[1:]
+            encoded_words.append(gen_next_word_index)
+            encoded_words = encoded_words[1:]
         print('---new generated text is',generated_word)
 
 
